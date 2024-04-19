@@ -10,30 +10,17 @@ import { LeftChevron, Loading, RightChevron } from "~/components/Icons";
 import { getStories } from "~/lib/api";
 import { StoryTypes } from "~/types";
 
-// export const route = {
-//   load({ location, params }) {
-//     void getStories(
-//       (params.stories as StoryTypes) || "top",
-//       +location.query.page || 1
-//     );
-//   },
-// } satisfies RouteDefinition;
-
 export default function Stories(props: RouteSectionProps) {
   const page = () => +props.location.query.page || 1;
   const type = () => (props.params.stories || "top") as StoryTypes;
 
-  const stories = createQuery(() => ({
-    queryKey: ["stories", type(), page()] as const,
-    queryFn: async ({ queryKey }) => {
-      return getStories(queryKey[1], queryKey[2]);
-    },
-  }));
-
   const [data] = createResource(
     () => [page(), type()],
     async () => {
-      return getStories(type(), page());
+      console.log("fetching", type(), page());
+      const data = await getStories(type(), page());
+      console.log(data.map((d) => d.title));
+      return data;
     }
   );
 
@@ -68,7 +55,7 @@ export default function Stories(props: RouteSectionProps) {
           <span class="tabular-nums">{page()}</span>
 
           <Show
-            when={stories.data && stories.data.length >= 29}
+            when={data() && data()!.length >= 29}
             fallback={
               <span
                 class="h-6 w-6 rounded border border-gray-300 flex items-center cursor-not-allowed justify-center opacity-40"
@@ -92,12 +79,15 @@ export default function Stories(props: RouteSectionProps) {
           </Show>
         </div>
         <main class="news-list">
-          {/* <Show when={stories.data}>
-            <div>{JSON.stringify(stories.data)}</div>
-            <ul>
-            <For each={stories()}>{(story) => <Story story={story} />}</For>
-          </ul>
-          </Show> */}
+          <Show when={data()}>
+            <pre>
+              {JSON.stringify(
+                data()!.map((d) => d.title),
+                null,
+                2
+              )}
+            </pre>
+          </Show>
         </main>
       </Suspense>
     </div>
