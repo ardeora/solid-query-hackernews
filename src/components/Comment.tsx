@@ -49,7 +49,7 @@ const Comment: Component<{ comment: CommentDefinition; nested?: boolean }> = (
           </span>
         </div>
         <div
-          class="text-sm text-gray-800 py-1 pb-1 ml-2 pl-4 border-l border-gray-300"
+          class="text-sm break-all text-gray-800 py-1 pb-1 ml-2 pl-4 border-l border-gray-300"
           innerHTML={props.comment.content}
         />
       </div>

@@ -8,23 +8,17 @@ import "./app.css";
 import Nav from "./components/Nav";
 import Tailwind from "./components/Tailwind";
 import LoaderSettings from "./components/LoaderSettings";
-
-// const SolidQueryDevtools = lazy(() =>
-//   import("@tanstack/solid-query-devtools").then((mod) => ({
-//     default: mod.SolidQueryDevtools,
-//   }))
-// );
+import { SolidQueryDevtools } from "@tanstack/solid-query-devtools";
 
 export default function App() {
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
-      {/* <Tailwind /> */}
       <Router
         root={(props) => (
           <MetaProvider>
             <Nav />
-            {/* <SolidQueryDevtools buttonPosition="bottom-left" /> */}
+            <SolidQueryDevtools buttonPosition="bottom-left" />
             <Suspense>
               {props.children}
               <LoaderSettings />
