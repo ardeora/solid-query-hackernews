@@ -4,25 +4,43 @@ import {
   type RouteDefinition,
   type RouteSectionProps,
 } from "@solidjs/router";
-import { createQuery } from "@tanstack/solid-query";
-import { For, Show, Suspense, createResource } from "solid-js";
+import {
+  createQuery,
+  keepPreviousData,
+  useQueryClient,
+} from "@tanstack/solid-query";
+import { For, Show, Suspense, createEffect, createResource } from "solid-js";
 import { LeftChevron, Loading, RightChevron } from "~/components/Icons";
+import LoadingBoundary from "~/components/LoadingBoundary";
+import Story from "~/components/Story";
 import { getStories } from "~/lib/api";
 import { StoryTypes } from "~/types";
+
+export const route = {
+  load({ location, params }) {
+    // Preload Data on link hover
+    const client = useQueryClient();
+    const page = +location.query.page || 1;
+    const type = (params.stories as StoryTypes) || "top";
+    client.ensureQueryData({
+      queryKey: ["stories", type, page],
+      queryFn: () => getStories(type, page),
+    });
+  },
+} satisfies RouteDefinition;
 
 export default function Stories(props: RouteSectionProps) {
   const page = () => +props.location.query.page || 1;
   const type = () => (props.params.stories || "top") as StoryTypes;
 
-  const [data] = createResource(
-    () => [page(), type()],
-    async () => {
-      console.log("fetching", type(), page());
-      const data = await getStories(type(), page());
-      console.log(data.map((d) => d.title));
-      return data;
-    }
-  );
+  const stories = createQuery(() => ({
+    queryKey: ["stories", type(), page()] as const,
+    queryFn: async ({ queryKey }) => {
+      return getStories(queryKey[1], queryKey[2]);
+    },
+    placeholderData: keepPreviousData,
+    reconcile: "id",
+  }));
 
   return (
     <div>
@@ -42,6 +60,7 @@ export default function Stories(props: RouteSectionProps) {
             }
           >
             <A
+              preload
               class="h-6 w-6 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100"
               href={`/${type()}?page=${page() - 1}`}
               aria-label="Previous Page"
@@ -55,7 +74,7 @@ export default function Stories(props: RouteSectionProps) {
           <span class="tabular-nums">{page()}</span>
 
           <Show
-            when={data() && data()!.length >= 29}
+            when={page() < 10 && stories.data && stories.data.length >= 29}
             fallback={
               <span
                 class="h-6 w-6 rounded border border-gray-300 flex items-center cursor-not-allowed justify-center opacity-40"
@@ -67,39 +86,34 @@ export default function Stories(props: RouteSectionProps) {
               </span>
             }
           >
-            <a
+            <A
+              preload
               class="h-6 w-6 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100"
               href={`/${type()}?page=${page() + 1}`}
+              onClick={() => {}}
               aria-label="Next Page"
             >
               <span class="h-5 w-5">
                 <RightChevron />
               </span>
-            </a>
+            </A>
           </Show>
         </div>
-        <main class="news-list">
-          <Show when={data()}>
-            <pre>
-              {JSON.stringify(
-                data()!.map((d) => d.title),
-                null,
-                2
-              )}
-            </pre>
+        <main class="bg-gray-100 pt-4">
+          <Show when={stories.data}>
+            <ul
+              class="flex flex-col transition-opacity"
+              style={{
+                opacity: stories.isFetching && !stories.isFetched ? 0.5 : 1,
+              }}
+            >
+              <For each={stories.data}>
+                {(story) => <Story story={story} />}
+              </For>
+            </ul>
           </Show>
         </main>
       </Suspense>
     </div>
   );
 }
-
-const LoadingBoundary = () => {
-  return (
-    <div class="h-12 bg-gray-50 border-b border-gray-200 items-center flex justify-center">
-      <span class="h-5 w-5 text-gray-500 animate-spin">
-        <Loading />
-      </span>
-    </div>
-  );
-};

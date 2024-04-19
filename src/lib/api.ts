@@ -1,3 +1,4 @@
+import { getCookie, setCookie } from "vinxi/http";
 import { StoryDefinition, StoryTypes, UserDefinition } from "~/types";
 
 const story = (path: string) => `https://node-hnapi.herokuapp.com/${path}`;
@@ -7,7 +8,8 @@ const user = (path: string) =>
 async function fetchAPI(path: string) {
   const url = path.startsWith("user") ? user(path) : story(path);
   const headers: Record<string, string> = { "User-Agent": "chrome" };
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const loaderDelay = await getLoaderDelay();
+  await new Promise((resolve) => setTimeout(resolve, loaderDelay));
   try {
     let response = await fetch(url, { headers });
     let text = await response.text();
@@ -50,4 +52,17 @@ export const getStory = async (id: string): Promise<StoryDefinition> => {
 export const getUser = async (id: string): Promise<UserDefinition> => {
   "use server";
   return fetchAPI(`user/${id}`);
+};
+
+export const setLoaderDelay = async (delay: number) => {
+  "use server";
+  setCookie("loaderDelay", delay.toString(), {
+    httpOnly: true,
+  });
+  return delay;
+};
+
+export const getLoaderDelay = async () => {
+  "use server";
+  return parseInt(getCookie("loaderDelay") || "0");
 };
