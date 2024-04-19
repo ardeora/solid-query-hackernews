@@ -16,6 +16,7 @@ import LoaderSettings from "./components/LoaderSettings";
 // );
 
 export default function App() {
+  const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
       {/* <Tailwind /> */}
