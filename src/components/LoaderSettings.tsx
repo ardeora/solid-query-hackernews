@@ -42,6 +42,7 @@ function LoaderSettings() {
             class="w-full accent-orange-600"
             type="range"
             min="0"
+            aria-label="Pick loader delay from a range"
             max="5000"
             step="100"
             onChange={async (e) => {

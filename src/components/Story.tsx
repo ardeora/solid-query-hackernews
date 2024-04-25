@@ -6,7 +6,7 @@ import type { StoryDefinition } from "../types";
 const Story: Component<{ story: StoryDefinition }> = (props) => {
   return (
     <li class="bg-gray-50 px-4 py-2 border-b border-gray-200 flex gap-4">
-      <div class="py-1.5 font-medium min-w-16 px-2 rounded-md border border-orange-300 text-orange-600 flex items-center justify-center tabular-nums bg-orange-50">
+      <div class="py-1.5 font-medium min-w-16 px-2 rounded-md border border-orange-300 text-orange-700 flex items-center justify-center tabular-nums bg-orange-50">
         {props.story.points || 0}
       </div>
       <div class="flex flex-col">
@@ -18,7 +18,7 @@ const Story: Component<{ story: StoryDefinition }> = (props) => {
             }
           >
             <a
-              class="text-orange-600 font-medium hover:underline leading-none"
+              class="text-orange-700 font-medium hover:underline leading-none"
               href={props.story.url}
               target="_blank"
               rel="noreferrer"
@@ -39,7 +39,7 @@ const Story: Component<{ story: StoryDefinition }> = (props) => {
             fallback={
               <A
                 preload
-                class="underline text-orange-600 hover:text-orange-700"
+                class="underline text-orange-700 hover:text-orange-700"
                 href={`/stories/${props.story.id}`}
               >
                 {props.story.time_ago}
@@ -49,7 +49,7 @@ const Story: Component<{ story: StoryDefinition }> = (props) => {
             by{" "}
             <A
               preload
-              class="underline text-orange-600 hover:text-orange-700"
+              class="underline text-orange-700 hover:text-orange-700"
               href={`/users/${props.story.user}`}
             >
               {props.story.user}
@@ -57,7 +57,7 @@ const Story: Component<{ story: StoryDefinition }> = (props) => {
             {props.story.time_ago} |{" "}
             <A
               preload
-              class="underline text-orange-600 hover:text-orange-700"
+              class="underline text-orange-700 hover:text-orange-700"
               href={`/stories/${props.story.id}`}
             >
               {props.story.comments_count

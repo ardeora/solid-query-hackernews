@@ -1,3 +1,4 @@
+import { Title } from "@solidjs/meta";
 import {
   A,
   createAsync,
@@ -29,6 +30,8 @@ export const route = {
   },
 } satisfies RouteDefinition;
 
+const properCase = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+
 export default function Stories(props: RouteSectionProps) {
   const page = () => +props.location.query.page || 1;
   const type = () => (props.params.stories || "top") as StoryTypes;
@@ -42,8 +45,11 @@ export default function Stories(props: RouteSectionProps) {
     reconcile: "id",
   }));
 
+  console.log(type());
+
   return (
     <div>
+      <Title>Solid Hacker News</Title>
       <Suspense fallback={<LoadingBoundary />}>
         <div class="h-12 bg-gray-50 border-b border-gray-200 text-gray-600 flex gap-4 justify-center items-center">
           <Show
