@@ -18,15 +18,19 @@ import { getStories } from "~/lib/api";
 import { StoryTypes } from "~/types";
 
 export const route = {
-  load({ location, params }) {
+  load({ location, params, intent }) {
     // Preload Data on link hover
-    const client = useQueryClient();
-    const page = +location.query.page || 1;
-    const type = (params.stories as StoryTypes) || "top";
-    client.ensureQueryData({
-      queryKey: ["stories", type, page],
-      queryFn: () => getStories(type, page),
-    });
+    // Do not preload data on initial page load
+    // Since the data will be streamed from the server
+    if (intent !== "initial") {
+      const client = useQueryClient();
+      const page = +location.query.page || 1;
+      const type = (params.stories as StoryTypes) || "top";
+      client.ensureQueryData({
+        queryKey: ["stories", type, page],
+        queryFn: () => getStories(type, page),
+      });
+    }
   },
 } satisfies RouteDefinition;
 
@@ -44,8 +48,6 @@ export default function Stories(props: RouteSectionProps) {
     placeholderData: keepPreviousData,
     reconcile: "id",
   }));
-
-  console.log(type());
 
   return (
     <div>

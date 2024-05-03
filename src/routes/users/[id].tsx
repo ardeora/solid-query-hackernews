@@ -9,12 +9,17 @@ import LoadingBoundary from "~/components/LoadingBoundary";
 import { getUser } from "~/lib/api";
 
 export const route = {
-  load({ params }) {
-    const client = useQueryClient();
-    client.ensureQueryData({
-      queryKey: ["user", params.id],
-      queryFn: () => getUser(params.id),
-    });
+  load({ params, intent }) {
+    // Preload Data on link hover
+    // Do not preload data on initial page load
+    // Since the data will be streamed from the server
+    if (intent !== "initial") {
+      const client = useQueryClient();
+      client.ensureQueryData({
+        queryKey: ["user", params.id],
+        queryFn: () => getUser(params.id),
+      });
+    }
   },
 } satisfies RouteDefinition;
 
