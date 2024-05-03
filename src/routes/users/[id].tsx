@@ -36,7 +36,7 @@ export default function User(props: RouteSectionProps) {
           <Show when={!user.data!.error} fallback={<h1>User not found.</h1>}>
             <div class="bg-gray-50 flex flex-col gap-1 border-b border-gray-200 p-4">
               <div class="align-bottom">
-                <h1 class="text-orange-600 pr-1 text-xl font-semibold hover:underline leading-snug inline-block">
+                <h1 class="text-orange-700 pr-1 text-xl font-semibold hover:underline leading-snug inline-block">
                   User : {user.data!.id}
                 </h1>
               </div>
@@ -54,7 +54,7 @@ export default function User(props: RouteSectionProps) {
               </ul>
               <p class="text-sm">
                 <a
-                  class="leading-none underline text-orange-600 hover:text-orange-700"
+                  class="leading-none underline text-orange-700 hover:text-orange-800"
                   href={`https://news.ycombinator.com/submitted?id=${
                     user.data!.id
                   }`}
@@ -63,7 +63,7 @@ export default function User(props: RouteSectionProps) {
                 </a>{" "}
                 |{" "}
                 <a
-                  class="leading-none underline text-orange-600 hover:text-orange-700"
+                  class="leading-none underline text-orange-700 hover:text-orange-800"
                   href={`https://news.ycombinator.com/threads?id=${
                     user.data!.id
                   }`}
