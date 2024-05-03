@@ -12,12 +12,15 @@ function LoaderSettings() {
   const setDelayBtn = async (value: "fast" | "fast3g" | "slow3g") => {
     switch (value) {
       case "fast":
+        mutate(150);
         await setLoaderDelay(150);
         break;
       case "fast3g":
+        mutate(500);
         await setLoaderDelay(500);
         break;
       case "slow3g":
+        mutate(2000);
         await setLoaderDelay(2000);
         break;
     }
