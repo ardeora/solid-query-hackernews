@@ -39,7 +39,7 @@ const Comment: Component<{ comment: CommentDefinition; nested?: boolean }> = (
             </Switch>
           </button>
           <A
-            class="leading-none underline text-orange-600 hover:text-orange-700"
+            class="leading-none underline text-orange-700 hover:text-orange-800"
             href={`/users/${props.comment.user}`}
           >
             {props.comment.user}
